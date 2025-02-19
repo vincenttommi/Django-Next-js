@@ -8,7 +8,7 @@ export default function Footer(){
         <div className="row">
           <div className="col-3">
             <a className={`  ${pacifico.className} fs-4`} style={{ 'color':'#ff66d6'}} href="#">Bellissimo </a>
-            <h6 className="text-white">Hotel Management System</h6>
+            <h6 className="text-white">Book with us $ enjoy your holiday</h6>
           </div>
 
         <div className="col-3">

@@ -1,7 +1,7 @@
 export default function HomeReviews() {
     return (
         <section className="container my-5 mb-4">
-            <h3 className="my-5 text-center " style={{color:'#68004c'}} >Reviews <a href="#" className="float-end fs-5 btn text-white" style={{'backgroundColor':'#68004c'}}>View All</a> </h3>
+            <h3 className="my-5 text-center " style={{color:'#68004c'}} >Reviews <a href="#" className="float-end fs-5 btn text-white  hms-bg-normal" >View All</a> </h3>
             <div className="row  mb-3">  
                 <div className="col-5 border p-2 ms-auto ">
                     <h5 style={{color:'#68004c'}}>Kennedy Jobs</h5>  
