@@ -12,7 +12,8 @@ export default function Page() {
                         </Link>
                         <div className="card-body hms-bg-normal text-center text-white">
                             <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 1</Link>
+                                <Link href='/room-types/single-rooms' className="text-white">Single Bedroom
+                                </Link>
                             </h5>
                         </div>
                     </div>
@@ -24,7 +25,8 @@ export default function Page() {
                         </Link>
                         <div className="card-body hms-bg-normal text-center text-white">
                             <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 2</Link>
+                                <Link href='/room-types/double-bed-room' className="text-white">Double Bedroom 
+                                </Link>
                             </h5>
                         </div>
                     </div>
@@ -36,7 +38,8 @@ export default function Page() {
                         </Link>
                         <div className="card-body hms-bg-normal text-white text-center">
                             <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 3</Link>
+                                <Link href='/room-type/double-bed-rooms' className="text-white">Room Type 3
+                                </Link>
                             </h5>
                         </div>
                     </div>
@@ -48,7 +51,8 @@ export default function Page() {
                         </Link>
                         <div className="card-body hms-bg-normal text-white text-center">
                             <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 4</Link>
+                                <Link href='/room-types' className="text-white">Room Type 4
+                                </Link>
                             </h5>
                         </div>
                     </div>
@@ -60,7 +64,8 @@ export default function Page() {
                         </Link>
                         <div className="card-body hms-bg-normal text-white text-center">
                             <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 5</Link>
+                                <Link href='/room-types' className="text-white">Room Type 5
+                                </Link>
                             </h5>
                         </div>
                     </div>
@@ -72,7 +77,8 @@ export default function Page() {
                         </Link>
                         <div className="card-body hms-bg-normal text-white text-center">
                             <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 6</Link>
+                                <Link href='/room-types' className="text-white">Room Type 6
+                                </Link>
                             </h5>
                         </div>
                     </div>
