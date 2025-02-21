@@ -9,7 +9,6 @@ export default function RoomTypeImages(){
 
       <div>
         <img src="/banner1.jpg"  />
-        <h4 className="my-">Amenties</h4>
       </div>
       <div>
         <img src="/banner2.jpeg" />
