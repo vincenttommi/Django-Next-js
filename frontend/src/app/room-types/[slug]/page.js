@@ -22,7 +22,7 @@ export default function Page(){
         </div>
         <div className="col-5 ">
           <div className="card">
-            <h5 className="card-header">Booking Form</h5>
+            <h5 className="card-header hms-color-dark">Booking Form</h5>
              
             <div className="card-body">
             <div className="mb-3">
@@ -47,7 +47,7 @@ export default function Page(){
           <label for="exampleFormControlInput1" className="form-label"><b>Check-Out</b></label>
            <input    type="date" className="form-control"/>
         </div>
-        <button className="btn hms-color-dark mt-3">Confirm Booking</button>
+         <Link  href="/checkout" className="btn hms-color-dark mt-3">Confirm Booking</Link>
             </div> 
           </div>
         </div>
