@@ -7,12 +7,12 @@ export default function Page() {
             <div className="row">
                 <div className="col-4">
                     <div className="card">
-                        <Link href="/room-types">
+                        <Link href="/room-types/single-bedroom">
                             <img src="room1.jpg" className="card-img-top" alt="Room Types" />
                         </Link>
                         <div className="card-body hms-bg-normal text-center text-white">
                             <h5 className="card-title">
-                                <Link href='/room-types/single-rooms' className="text-white">Single Bedroom
+                                <Link href='/room-types/single-bedroom' className="text-white">Single Bedroom
                                 </Link>
                             </h5>
                         </div>
@@ -20,7 +20,7 @@ export default function Page() {
                 </div>
                 <div className="col-4">
                     <div className="card">
-                        <Link href="/room-types">
+                        <Link href="/room-types/double-bedroom">
                             <img src="room1.jpg" className="card-img-top" alt="Room Types" />
                         </Link>
                         <div className="card-body hms-bg-normal text-center text-white">
