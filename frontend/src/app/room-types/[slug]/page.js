@@ -22,7 +22,7 @@ export default function Page(){
         </div>
         <div className="col-5 ">
           <div className="card">
-            <h5 className="card-header hms-color-dark">Booking Form</h5>
+            <h5 className="card-header hms-color-dark">Bozoking Form</h5>
              
             <div className="card-body">
             <div className="mb-3">
