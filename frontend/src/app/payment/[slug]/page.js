@@ -1,11 +1,18 @@
-export default function Page(){
-
+import Link from "next/link"
+import PaymentSuccess from "@/app/components/payment/PaymentSuccess";
+import PaymentFailure from "@/app/components/payment/PaymentFailure";
+export default function Page({params}){
+     
+       const slug=params.slug;
     return(
-        <>
-
-         <h3 className="text-success"><i className="fa fa-check-circle">Thank you</i></h3>
-
-
-        </>
+       
+        <section className="container my-5 text-center ">
+            {
+                slug  == 'success' &&  <PaymentSuccess />
+            }
+            {
+                slug  == 'failure' &&  <PaymentFailure />
+            }
+      </section>
     )
 }
