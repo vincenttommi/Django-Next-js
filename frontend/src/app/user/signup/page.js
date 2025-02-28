@@ -39,13 +39,13 @@ export default function Page(){
                 <input  type="email"  className="form-control"  placeholder="Email" />
 
               </div>
-
+          
               <div  className="col-md-6 col-12 mb-3">
                 <button className="btn btn-secondary">Reset</button>
                 <button className="btn hms-color-dark m-2">Submit</button>
               </div>
               <p>
-                if you are already registered user, <Link href="#">Login here</Link> 
+                if you are already registered user, <Link href="/user/login">Login here</Link> 
               </p>
               </div>
             </div> 
