@@ -1,17 +1,14 @@
 import BarChart from "@/app/components/user/BarChart";
+import DashboardSidebar from "@/app/components/user/DashboardSidebar";
 import Link from "next/link";
+
+
 export default function Page(){
     return(
       <section  className="container m-5 ">
         <div className="row">
             <div className="col-md-4 col-12">
-                  <div className="list-group">
-                    <Link className="list-group-item hms-bg-normal" href="#">Dashboard</Link>
-                    <Link className="list-group-item" href="#">Booking history</Link>
-                    <Link className="list-group-item" href="#">Payment logs</Link>
-                    <Link className="list-group-item" href="#">Update Profile</Link>
-                    <Link className="list-group-item text-danger" href="#">Logout</Link>
-                  </div>
+                  <DashboardSidebar/>
             </div>
             <div className="col-md-8 col-12">
                     <div className="row">
