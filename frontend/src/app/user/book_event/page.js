@@ -1,0 +1,47 @@
+import  Link from  "next/link";
+import RoomTypeImages from "@/app/components/RoomTypeImages";
+
+
+export default function Page(){
+  return(
+    <section className="container my-5">
+        <h3 className="my-4">Book Event</h3>
+      <div className="row">
+        <div className="col-7">
+            <RoomTypeImages />
+        </div>
+        <div className="col-5 ">
+          <div className="card">
+            <h5 className="card-header hms-color-dark">Booking Form</h5>
+             
+            <div className="card-body">
+            <div className="mb-3">
+         <label for="exampleFormControlInput1" className="form-label"><b>Room Type:</b>Double Bedroom</label>
+        </div>
+        <div className="mb-3">
+          
+        <label for="exampleFormControlInput1" className="form-label"><b>Charges:</b>1500/Night</label>
+        </div>
+
+        <hr/>
+
+         <div className="mb-3">
+          <label for="exampleFormControlInput1" className="form-label"><b>Total Guests</b></label>
+            <input type="number" className="form-control" />
+         </div>
+        <div className="mb-3">
+          <label for="exampleFormControlInput1" className="form-label"><b>Check-In</b></label>
+           <input type="date" className="form-control" />
+        </div>
+        <div className="mb-3">
+          <label for="exampleFormControlInput1" className="form-label"><b>Check-Out</b></label>
+           <input    type="date" className="form-control"/>
+        </div>
+         <Link  href="/checkout" className="btn hms-color-dark mt-3">Confirm Booking</Link>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+} 
