@@ -11,6 +11,7 @@ export default function Page(){
             
 
             <div className="col-md-8 col-12">
+              <h3>Booking History</h3>
               <div className="table-responsive">
                 <table className="table table-bordered table-hover">
                   <thead>
@@ -36,6 +37,8 @@ export default function Page(){
                       </td>
                       <td>
                           <Link href="#" className="btn btn-sm btn-outline-success">Approve</Link>
+                          <Link href="#" className="btn btn-sm btn-outline-danger ms-1  ">Cancel</Link>
+                          <Link href="#" className="btn btn-sm btn-outline-danger ms-1">Guest Detail</Link>
                       </td>
                     </tr>
                   </tbody>
