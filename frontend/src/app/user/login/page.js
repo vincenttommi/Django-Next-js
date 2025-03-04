@@ -30,7 +30,7 @@ export default function Page(){
                 <Link className="text-danger" href="/user/forgetpassword">Forgetpassword?</Link>
               </p>
                  <p>
-                    If you are already registered user,<Link href="/user/signup">SignUp here</Link>
+                    If you not  already registered user,<Link href="/user/signup">SignUp here</Link>
                  </p>
               </div>
             </div> 

@@ -24,7 +24,7 @@ export default function Page(){
               </div>
   
               <p>
-                if you are not registered user, <Link href="/user/signup">SignUp here</Link>
+                if you want to change your password,<Link href="/user/change_password">Click here</Link>
               </p>
 
             </div>
