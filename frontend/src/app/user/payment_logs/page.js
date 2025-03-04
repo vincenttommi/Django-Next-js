@@ -15,30 +15,23 @@ export default function Page(){
                 <table className="table table-bordered table-hover">
                   <thead>
                   <tr>
-                    <th>Booking Date</th>
+                    <th>Payment Date</th>
                     <th>Detail</th>
                     <th>Invoice</th>
-                    <th>Actions</th>
                   </tr>
                   </thead>
                   <tbody> 
                     <tr>
-                      <td>03/03/2025</td>
                       <td>
                         <p className="m-0 fw-bold hms-color">2 rooms</p>
                         <p className="m-0 fw-bold hms-color">03/03/2025 - 10/03/2025</p>
                         <p className="m-0 fw-bold hms-color">    4 Guests</p>
                       </td>
                       <td>
-                        <p className="m-0 fw-bold "><Link href="#">Bellissimo 123</Link></p>
-                        <p className="m-0 fw-bold "><Link href="#">50,000</Link></p>
-                        <p className="m-0 fw-bold text-danger">    Due</p>
+                        <p className="m-0 fw-bold  "><Link className="hms-color" href="#">Bellissimo 123</Link></p>
+                        <p className="m-0 fw-bold "><Link  className="hms-color" href="#">50,000</Link></p>
                       </td>
-                      <td>
-                          <Link href="#" className="btn btn-sm btn-outline-success">Approve</Link>
-                          <Link href="#" className="btn btn-sm btn-outline-danger ms-1  ">Cancel</Link>
-                          <Link href="#" className="btn btn-sm btn-outline-danger ms-1">Guest Detail</Link>
-                      </td>
+                      
                     </tr>
                   </tbody>
                 </table>
