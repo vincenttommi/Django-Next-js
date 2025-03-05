@@ -26,10 +26,10 @@ export default function Header() {
               <a className="nav-link text-white fw-bold" href="#">Services</a>
             </li>
             <li className="nav-item me-3">
-              <a className="nav-link text-white fw-bold" href="#">About Us</a>
+              <a className="nav-link text-white fw-bold" href="/about">About Us</a>
             </li>
             <li className="nav-item me-3">
-              <a className="nav-link text-white fw-bold" href="#">Contact</a>
+              <a className="nav-link text-white fw-bold" href="/contact">Contact Us</a>
             </li>
             <li className="nav-item me-3">
               <Link className="btn mt-1 text-white " href="/user/book_event">Book Event</Link>
