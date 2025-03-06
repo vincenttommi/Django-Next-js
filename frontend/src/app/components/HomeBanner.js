@@ -11,7 +11,7 @@ export default function HomeBanners() {
         <Image src="/banner2.jpeg" alt="Banner 2" width={800} height={400} />
       </div>
       <div>
-        <Image src="/banner2.jpeg" alt="Banner 2" width={800} height={400} />
+        <Image src="/banner3.jpeg" alt="Banner 2" width={800} height={400} />
       </div>
       <div>
         <Image src="/banner3.jpeg" alt="Banner 3" width={800} height={400} />

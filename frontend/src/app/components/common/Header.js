@@ -17,7 +17,7 @@ export default function Header() {
         <div className={`collapse navbar-collapse ${fredoka.className}`} id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item me-3">
-              <Link href='/' className="nav-link text-white fw-bold" aria-current="page">Home</Link>
+              <Link href='#' className="nav-link text-white fw-bold" aria-current="page">Home</Link>
             </li>
             <li className="nav-item me-3">
               <a className="nav-link text-white fw-bold" href="#">Gallery</a>

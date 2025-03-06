@@ -1,17 +1,16 @@
-import HomeBanners from "./components/HomeBanner"
-import HomeServices from "./components/HomeServices"
-import HomeGallery from "./components/HomeGallery"
-import HomeReviews from "./components/HomeReviews"
-import Link from "next/link"
+import HomeBanners from "./components/HomeBanner";
+import HomeGallery from "./components/HomeGallery";
+import HomeServices from "./components/HomeServices";
+
+
+
 
 export default function Home(){
-
     return(
         <main>
             <HomeBanners />
-            <HomeServices/>
-            <HomeGallery/>
-            <HomeReviews/>
+            <HomeServices />
+            <HomeGallery />
         </main>
     )
 }

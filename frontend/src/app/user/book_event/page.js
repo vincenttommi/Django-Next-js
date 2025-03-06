@@ -35,6 +35,8 @@ export default function Page(){
             <input type="number" className="form-control" />
          </div>
         <div className="mb-3">
+
+          
           <label htmlFor="exampleFormControlInput1" className="form-label"><b>Event Date</b></label>
            <input type="date" className="form-control" />
         </div>

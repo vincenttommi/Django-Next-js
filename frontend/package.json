@@ -12,6 +12,7 @@
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.8",
     "font-awesome": "^4.7.0",
+    "fslightbox-react": "^1.7.6",
     "next": "15.1.7",
     "next-transpile-modules": "^10.0.1",
     "react": "^19.0.0",
