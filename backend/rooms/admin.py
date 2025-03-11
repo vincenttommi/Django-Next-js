@@ -1,7 +1,12 @@
 from django.contrib import admin
-from . import models
+from .models import Booking,Room,RoomType
 
-admin.site.register(models.RoomType)  
-admin.site.register(models.Room)
-admin.site.register(models.Booking)
+
+
+admin.site.register(Booking)
+admin.site.register(Room)
+admin.site.register(RoomType)
+
+
+
 
