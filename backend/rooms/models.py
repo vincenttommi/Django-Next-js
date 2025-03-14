@@ -24,10 +24,6 @@ class  Room(models.Model):
        return f'{self.room_no} - {self.room_type}'
    
     
- 
-  
-  
-
 
 class Booking(models.Model):
    room_no=models.ForeignKey(Room,on_delete=models.CASCADE)
@@ -43,11 +39,6 @@ class Booking(models.Model):
    def __str__(self):
         return f'{self.room_no.room_no}-{self.user}'
   
-
-
-
-
-
 
 class Payment(models.Model):
    booking=models.ForeignKey(Booking, on_delete=models.CASCADE)
