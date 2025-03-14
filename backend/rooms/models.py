@@ -54,4 +54,21 @@ class Payment(models.Model):
    transaction_id  =  models.TextField() 
    total_amount=models.DecimalField(max_digits=10, decimal_places=2)
    response_data = models.TextField() 
-   payment_date = models.DateTimeField(auto_now_add=True)    
+   payment_date = models.DateTimeField(auto_now_add=True)
+   
+   
+   
+
+class Gallery(models.Model):
+   image = models.ImageField(upload_to='g_images/')    
+    
+    
+
+class RoomImage(models.Model):
+   room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, null=True)
+   image=models.ImageField(upload_to='room_type_images/')        
+   
+   
+   
+   
+   

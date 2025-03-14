@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rooms',
     'rest_framework',
     'events',
+    'website'
 ]
 
 MIDDLEWARE = [
