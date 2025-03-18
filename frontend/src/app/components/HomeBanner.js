@@ -38,11 +38,11 @@ export default function HomeBanners() {
       <Carousel showThumbs={false}>
     {BannerList.map((item, index) => (
       <div key={index}>
-        <img src={item.image} alt={item.title} />
+        <Image   src={item.image}  alt={item.title} width={1000} height={400} style={{ boxShadow:"none"}}
+        objectFit="contain"
+        />
       </div>
     ))}
   </Carousel>
-
-
   );
 }
