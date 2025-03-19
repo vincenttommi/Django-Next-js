@@ -22,17 +22,18 @@ async function getData(){
 
 export default async function Page(){
    
-      const roomtypes = await getData();
+      const roomData = await getData();
+    //Extracting the results  array from the paginated response
+    const roomtypes = roomData?.results || [];
 
     return(
     <section className="container my-5">
         <h3 className="my-4">Room Types(6)</h3>
         <div className="row text-center">
            {
-              roomtypes.map((item, index)=>(
+            roomtypes.map((item, index)=>(
                 <RoomType item={item} key={index} />
-              ))
-           }
+              ))}
         </div>
     <nav className="text-center">
         <ul className="pagination">
