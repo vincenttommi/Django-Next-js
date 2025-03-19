@@ -1,89 +1,49 @@
+import RoomType from "../components/RoomType";
 import Link from "next/link";
 
-export default function Page() {
-    return (
-        <section className="container my-5">
-            <h3 className="my-4">Room Types (6)</h3>
-            <div className="row">
-                <div className="col-4">
-                    <div className="card">
-                        <Link href="/room-types/single-bedroom">
-                            <img src="room1.jpg" className="card-img-top" alt="Room Types" />
-                        </Link>
-                        <div className="card-body hms-bg-normal text-center text-white">
-                            <h5 className="card-title">
-                                <Link href='/room-types/single-bedroom' className="text-white">Single Bedroom
-                                </Link>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-4">
-                    <div className="card">
-                        <Link href="/room-types/double-bedroom">
-                            <img src="room1.jpg" className="card-img-top" alt="Room Types" />
-                        </Link>
-                        <div className="card-body hms-bg-normal text-center text-white">
-                            <h5 className="card-title">
-                                <Link href='/room-types/double-bed-room' className="text-white">Double Bedroom 
-                                </Link>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-4 mb-4">
-                    <div className="card">
-                        <Link href="/room-types">
-                            <img src="room1.jpg" className="card-img-top" alt="Room Types" />
-                        </Link>
-                        <div className="card-body hms-bg-normal text-white text-center">
-                            <h5 className="card-title">
-                                <Link href='/room-type/double-bed-rooms' className="text-white">Room Type 3
-                                </Link>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-4 mb-4">
-                    <div className="card">
-                        <Link href="/room-types">
-                            <img src="room1.jpg" className="card-img-top" alt="Room Types" />
-                        </Link>
-                        <div className="card-body hms-bg-normal text-white text-center">
-                            <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 4
-                                </Link>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-4 mb-4">
-                    <div className="card">
-                        <Link href="/room-types">
-                            <img src="room1.jpg" className="card-img-top" alt="Room Types" />
-                        </Link>
-                        <div className="card-body hms-bg-normal text-white text-center">
-                            <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 5
-                                </Link>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-4 mb-4">
-                    <div className="card">
-                        <Link href="/room-types">
-                            <img src="room1.jpg" className="card-img-top" alt="Room Types" />
-                        </Link>
-                        <div className="card-body hms-bg-normal text-white text-center">
-                            <h5 className="card-title">
-                                <Link href='/room-types' className="text-white">Room Type 6
-                                </Link>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
+async function getData(){
+    try{
+        const response = await fetch('http://localhost:8000/rooms/roomtypes/');
+
+        if (!response.ok){
+            throw new Error(`HTTP error ! status: ${response.status}`);
+        }
+
+        const data  = await response.json(); // converting the response to a json object
+        return data;
+    } catch (error){
+        console.error('Error fetching data:', error)
+    }
+  }
+
+   
+
+
+
+export default async function Page(){
+   
+      const roomtypes = await getData();
+
+    return(
+    <section className="container my-5">
+        <h3 className="my-4">Room Types(6)</h3>
+        <div className="row text-center">
+           {
+              roomtypes.map((item, index)=>(
+                <RoomType item={item} key={index} />
+              ))
+           }
+        </div>
+    <nav className="text-center">
+        <ul className="pagination">
+            <li className="page-item"><a className="page-link" href="#">Previous</a></li>
+            <li className="page-item"><a className="page-link" href="#">1</a></li>
+            <li className="page-item"><a className="page-link" href="#">2</a></li>
+            <li className="page-item"><a className="page-link" href="#">3</a></li>
+            <li className="page-item"><a className="page-link" href="#">Next</a></li>
+        </ul>
+</nav>
+
+    </section>
+    )
 }
