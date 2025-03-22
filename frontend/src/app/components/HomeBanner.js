@@ -6,39 +6,41 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function HomeBanners() {
-    const [BannerList, setBannerList] = useState([]);
-  
-    async function fetchData() {
-      try {
-        const response = await fetch("http://localhost:8000/website/banners/", { mode: "cors" });
+  const [BannerList, setBannerList] = useState([]);
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-  
-        const res = await response.json();
-        
-        if (res.results) {
-          setBannerList(res.results); // Ensure you extract "results" from the paginated response
-        } else {
-          setBannerList([]); // Fallback if "results" is not present
-        }
-      } catch (error) {
-        console.error("Fetch error:", error);
+  async function fetchData() {
+    try {
+      const response = await fetch("http://localhost:8000/website/banners/", {
+        mode: "cors",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    }
-  
-    useEffect(() => {
-      fetchData();
-    }, []);
 
-    return (
-      <Carousel showThumbs={false}>
-        {BannerList.map((item, index) => (
-          <div key={index}>
-            <Image src={item.image} alt={item.title} width={1000} height={400} style={{ boxShadow: "none" }} objectFit="contain" />
-          </div>
-        ))}
-      </Carousel>
-    );
+      const res = await response.json();
+      // console.log("API Response:", res);
+
+      setBannerList(Array.isArray(res) ? res : []); // Ensure response is an array
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  
+  return (
+    <Carousel showThumbs={false}>
+      {BannerList.map((item, index) => (
+        <div key={index}>
+          <img src={item.image} alt={item.title} width="1000" height="400"/>
+        </div>
+      ))}
+    </Carousel>
+  );
+  
+
 }
