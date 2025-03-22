@@ -47,3 +47,36 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 
 post_save.connect(create_user_profile, sender=User)
+
+
+
+class Career(models.Model):
+    full_name  = models.CharField(max_length=200, null=True)
+    email = models.CharField(max_length=200, null=True)
+    mobile=models.CharField(null=True)
+    message = models.TextField(null=True)
+    updated_cv = models.FileField(upload_to='cv_files/')
+    add_time = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return  self.full_name 
+    
+    
+
+
+
+class Banners(models.Model):
+    title = models.CharField(max_length=200, null=True)
+    image=models.ImageField(upload_to='banner_images')
+    
+    
+    def __str__(self):
+        return self.title
+    
+    
+    
+    
+class ControlPanel(models.Model):
+    logo = models.ImageField(upload_to='logo_images')
+        
+    
