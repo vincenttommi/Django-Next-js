@@ -10,8 +10,9 @@ class RoomTypeView(APIView):
     serializer_class = RoomTypeSerializer
     
     def get(self, request):
-        roomtypes = models.RoomType.objects.all().order_by('id')
-        
+       
+        # Prefetch related RoomImage objects using the related_name "room_type_images"
+        roomtypes = models.RoomType.objects.all().order_by('id').prefetch_related('room_type_images')
         # Using DRF's default pagination
         paginator = PageNumberPagination()
         try:
