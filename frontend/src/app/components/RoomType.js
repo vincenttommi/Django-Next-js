@@ -1,33 +1,19 @@
 import Link from "next/link";
 
-export default function RoomType({ item }) {
-  const images = item.room_type_images || [];
-
-  let first_image = '/banner1.jpg';
-
-  if (images.length > 0 && images[0].image) {
-    first_image = images[0].image;
-  }
-
-  return (
+export default function RoomType(){
+  return(
     <div className="col-4 mb-4">
-      <div className="card">
-        <Link href={`/room-types/${encodeURIComponent(item.title)}`}> {/* Use title as slug */}
-          <img
-            src={first_image}
-            className="card-img-top"
-            alt="Room Types"
-            style={{ height: "200px", objectFit: "cover" }}
-          />
-        </Link>
-        <div className="card-body hms-color-dark text-white">
-          <h5 className="card-title">
-            <Link href={`/room-types/${encodeURIComponent(item.title)}`} className="text-white">
-              {item.title}
-            </Link>
-          </h5>
-        </div>
+      <Link href='/room-types/single-bedroom'>
+      <img src="/banner1.jpeg" className="card-img-top" alt="Room Types" />
+      </Link>
+      <div className="card-body hms-color-dark text-white">
+        <h5>
+
+          <Link href='/room-types/single-bedroom' className="text-white">Single Bedroom</Link>
+        </h5>
+
       </div>
+
     </div>
-  );
+  )
 }
