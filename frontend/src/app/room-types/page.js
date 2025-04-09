@@ -2,7 +2,7 @@ import RoomType from "../components/RoomType";
 import Link from "next/link";
 
 export default async function Page() {
-  let roomTypes = [];
+  let roomtypes = [];
   let error = null;
 
   try {
@@ -16,44 +16,45 @@ export default async function Page() {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
-    const data = await res.json(); // Get the raw API response
+    const data = await res.json();
 
-    // Log the data to debug
     console.log('API Response:', data);
 
-    // Adjust this based on your API's response structure
-    if (Array.isArray(data)) {
-      roomTypes = data; // If the response is already an array
-    } else if (data.data && Array.isArray(data.data)) {
-      roomTypes = data.data; // If the response is { data: [], meta: {} }
+    // Extract the results array from the API response
+    if (data.results && Array.isArray(data.results)) {
+      roomtypes = data.results;
     } else {
-      roomTypes = []; // Fallback: empty array if data is not as expected
-      console.warn('Unexpected API response format:', data);
+      roomtypes = [];
+      console.warn('Unexpected API response format or no results found:', data);
     }
   } catch (err) {
     error = err.message;
     console.error('Error fetching room types:', err);
-  } 
+  }
 
   if (error) {
     return (
       <section className="container my-5">
-        <div>Error loading room types: {error}</div>
+        <div className="alert alert-danger">Error loading room types: {error}</div>
+      </section>
+    );
+  }
+
+  if (roomtypes.length === 0) {
+    return (
+      <section className="container my-5">
+        <div>No room types available</div>
       </section>
     );
   }
 
   return (
     <section className="container my-5">
-      <h3 className="my-4">Room Types({roomTypes.length})</h3>
+      <h3 className="my-4">Room Types({roomtypes.length})</h3>
       <div className="row text-center">
-        {roomTypes.length > 0 ? (
-          roomTypes.map((room, index) => (
-            <RoomType key={index} room={room} />
-          ))
-        ) : (
-          <div>No room types available</div>
-        )}
+        {roomtypes.map((item) => (
+          <RoomType item={item} key={item.id} /> 
+        ))}
       </div>
 
       <nav aria-label="Page navigation example">

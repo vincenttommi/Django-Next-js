@@ -1,14 +1,14 @@
 from rest_framework import serializers
-from . import models
+from .models import RoomType, RoomImage
 
 class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.RoomImage
-        fields = ['id', 'image']  # Include 'id' to return the image id
+        model = RoomImage
+        fields = ['image']
 
 class RoomTypeSerializer(serializers.ModelSerializer):
     room_type_images = RoomImageSerializer(many=True, read_only=True)
-    
+
     class Meta:
-        model = models.RoomType
-        fields = ['id', 'title', 'detail', 'room_type_images']
+        model = RoomType
+        fields = ['id', 'title', 'detail', 'room_type_images']  # Include id instead of slug
