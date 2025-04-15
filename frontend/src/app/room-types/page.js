@@ -13,7 +13,7 @@ async function getData(page_no) {
 }
 
 export default async function Page({ searchParams }) {
-  const page = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
+  const page = searchParams?.page ? parseInt(searchParams.page, 10) : 1;  
   console.log("Current page:", page);
   let roomtypes = [];
   let count = 0;
