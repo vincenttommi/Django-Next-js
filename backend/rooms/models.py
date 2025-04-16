@@ -63,7 +63,7 @@ class RoomImage(models.Model):
    
    
    def __str__(self):
-      return  self.room_type.title if self.room_type else "No Room Type"
+      return  self.room_type.title 
    
    
    

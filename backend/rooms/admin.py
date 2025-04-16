@@ -20,7 +20,7 @@ class RoomTypeAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
     def first_image(self, obj):
-        first_image = obj.room_type_images.first()
+        first_image = obj.room_type_images .first()
         if first_image:
             return mark_safe('<img src="%s" width="50" />' % first_image.image.url)
         return ""
@@ -29,3 +29,5 @@ class RoomTypeAdmin(admin.ModelAdmin):
 
 # Register RoomType with RoomTypeAdmin
 admin.site.register(RoomType, RoomTypeAdmin)
+
+

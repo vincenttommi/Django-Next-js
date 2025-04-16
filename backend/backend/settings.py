@@ -147,7 +147,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE':3
+    'PAGE_SIZE':6
 }
 
 #pagination returns  6sets of data per request instead of entire dataset that helps in efficieny of db
