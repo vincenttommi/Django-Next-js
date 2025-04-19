@@ -20,16 +20,19 @@ export default function Header() {
               <Link href='/' className="nav-link text-white fw-bold" aria-current="page">Home</Link>
             </li>
             <li className="nav-item me-3">
-              <a className="nav-link text-white fw-bold" href="#">Gallery</a>
+              <Link className="nav-link text-white fw-bold" href="#">Gallery</Link>
             </li>
             <li className="nav-item me-3">
-              <a className="nav-link text-white fw-bold" href="#">Services</a>
+              <Link className="nav-link text-white fw-bold" href="#">Services</Link>
             </li>
             <li className="nav-item me-3">
-              <a className="nav-link text-white fw-bold" href="/about">About Us</a>
+            <Link href="/about" className="nav-link text-white fw-bold">About Us</Link>
             </li>
             <li className="nav-item me-3">
-              <a className="nav-link text-white fw-bold" href="/contact">Contact Us</a>
+              <Link className="nav-link text-white fw-bold" href="/contact">Contact Us</Link>
+            </li>
+            <li>
+              <Link href="/user/signup" className='btn mt-1 me-2  text-white fw-bold  bg-success'>SignUp</Link>
             </li>
             <li className="nav-item me-3">
               <Link className="btn mt-1 text-white " href="/user/book_event">Book Event</Link>
