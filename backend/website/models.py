@@ -40,15 +40,6 @@ class Profile(models.Model):
         return self.user.username
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-
-post_save.connect(create_user_profile, sender=User)
-
-
 
 class Career(models.Model):
     full_name  = models.CharField(max_length=200, null=True)

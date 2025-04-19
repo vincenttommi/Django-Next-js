@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Banners,Profile
+from .models import Banners, Profile
 
 class BannerSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
@@ -11,17 +11,12 @@ class BannerSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         request = self.context.get('request')
-        # Build the absolute URI for the image file
         return request.build_absolute_uri(obj.image.url) if request else obj.image.url
-
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['mobile']
-        
-        
-        
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
@@ -44,4 +39,3 @@ class UserSerializer(serializers.ModelSerializer):
         Profile.objects.create(user=user, **profile_data)
 
         return user
-        
