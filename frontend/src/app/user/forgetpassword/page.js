@@ -7,7 +7,7 @@ export default function Page(){
         <div className="col-10 offset-1">
           <div className="row">
             <div className="col-md-6 col-12 ">
-              <img  src="/banner2.jpeg"  className="img-fluid"/>
+              <img  src="/banner1.jpeg"  className="img-fluid"/>
             </div>
             
           <div className="col-md-6 col-12 ">
