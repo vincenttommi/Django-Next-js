@@ -3,6 +3,8 @@ from  . serializers import LoginSerializer, UserSerializer,BannerSerializer
 from . import  models
 from rest_framework import status
 from rest_framework.response import Response
+from  django.contrib.auth import authenticate,login
+
 
 
 
@@ -37,9 +39,13 @@ class SignUpView(APIView):
 
 class LoginUserView(APIView):
     def post(self, request):
-        print("Received data:", request.data)
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        print("Errors:", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        email = request.dat.get('email')
+        password = request.data.get('password')
+        
+        user = authenticate(request,username=email,password=password)
+        if user is None:
+            login(request,user)
+            return Response({'success':True},status=status.HTTP_200_OK)
+        return Response({'detail':'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+        
