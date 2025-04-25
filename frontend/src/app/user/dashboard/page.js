@@ -1,14 +1,32 @@
 import BarChart from "@/app/components/user/BarChart";
 import DashboardSidebar from "@/app/components/user/DashboardSidebar";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import BarChart from "@/app/components/user/BarChart";
+import DashboardSidebar from "@/app/components/user/DashboardSidebar";
+import Link from "next/link";
 
 
 export default function Page(){
+    
+    useEffect(()=>{
+        const checkAuth = async () =>{
+            const response = await fetch('http://localhost:8000/website/check-auth',{
+                credentials: 'include',
+            });
+            if(!response.ok){
+                router.push('/login');
+            }
+        };
+        checkAuth();
+    },[router]);
+
     return(
       <section  className="container m-5 ">
         <div className="row">
             <div className="col-md-4 col-12">
-                  <DashboardSidebar/>
+                  <DashboardSidebar />
             </div>
             <div className="col-md-8 col-12">
                     <div className="row">
