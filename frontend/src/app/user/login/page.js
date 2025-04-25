@@ -12,7 +12,7 @@ export default function Page() {
   async function handleForm(e) {
     e.preventDefault();
     const formData = new FormData(formRef.current);
-
+    
     const data = {
       email: formData.get('email'),
       password: formData.get('password'),

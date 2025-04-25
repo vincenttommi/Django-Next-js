@@ -12,9 +12,13 @@ export default function Header() {
 
   useEffect(() => {
     // Access localStorage only in the browser
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error('Error parsing user from localStorage:', error);
     }
   }, []); // Empty dependency array to run once on mount
 
@@ -65,16 +69,17 @@ export default function Header() {
                 Contact Us
               </Link>
             </li>
-            {user?.email === '' && user && (
-              <li>
-                <Link href="/user/signup" className="btn mt-1 me-2 text-white fw-bold bg-success">
+            {/* Conditional rendering for SignUp and Logout */}
+            {!user && (
+              <li className="nav-item">
+                <Link className="btn mt-1 me-3 text-white fw-bold bg-success" href="/user/signup">
                   SignUp
                 </Link>
               </li>
             )}
-            {user?.email && (
-              <li className="nav-item me-3">
-                <Link className="btn mt-1 me-3 text-white" href="/user/logout">
+            {user && (
+              <li className="nav-item">
+                <Link className="btn mt-1 me-3 text-white fw-bold" href="/user/logout">
                   Logout
                 </Link>
               </li>
