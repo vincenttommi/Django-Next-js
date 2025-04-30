@@ -64,6 +64,7 @@ class LogoutUserSerializer(serializers.Serializer):
     }
 
     def validate(self, attrs):
+        
         self.token = attrs.get('refresh_token')  # Fixed typo
         return attrs
 
@@ -71,5 +72,5 @@ class LogoutUserSerializer(serializers.Serializer):
         try:
             token = RefreshToken(self.token)
             token.blacklist()
-        except TokenError:
+        except TokenError as e:
             raise serializers.ValidationError(self.error_messages['bad_token'])

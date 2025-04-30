@@ -35,6 +35,8 @@ class SignUpView(APIView):
         )
 
 
+
+
 class LoginUserView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -48,30 +50,20 @@ class LoginUserView(APIView):
         )
         if user:
             refresh = RefreshToken.for_user(user)
-            user_serializer = UserSerializer(user)  # Serialize user data
-            response = Response(
-                {
-                    'success': True,
-                    'access_token': str(refresh.access_token),
-                    'refresh_token': str(refresh),
-                    'user': user_serializer.data  # Add user data
-                },
-                status=status.HTTP_200_OK
-            )
-            response.set_cookie(
-                key='auth_token',
-                value=str(refresh.access_token),
-                httponly=True,
-                samesite='Lax',
-                path='/'
-            )
-            return response
+            user_serializer = UserSerializer(user)
+            return Response({
+                'success': True,
+                'access_token': str(refresh.access_token),
+                'refresh_token': str(refresh),
+                'user': user_serializer.data
+            }, status=status.HTTP_200_OK)
+
         return Response(
             {'detail': 'Invalid credentials'},
             status=status.HTTP_401_UNAUTHORIZED
         )
-        
-        
+
+                
 
 
 class LogoutUserView(APIView):
