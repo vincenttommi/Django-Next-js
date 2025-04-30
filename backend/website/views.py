@@ -1,13 +1,13 @@
 from rest_framework.views import APIView
-from .serializers import LoginSerializer, UserSerializer, BannerSerializer
+from .serializers import LoginSerializer, LogoutUserSerializer, UserSerializer, BannerSerializer
 from . import models
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from rest_framework.permissions import IsAuthenticated
 from   rest_framework_simplejwt.tokens import  RefreshToken,TokenError
+from rest_framework.decorators import  permission_classes
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class SignUpView(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 class LoginUserView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -74,21 +74,16 @@ class LoginUserView(APIView):
         
 
 
-
-
 class LogoutUserView(APIView):
-    permission_classes = (IsAuthenticated,)
-    def post(self,request):
-        refresh_token = request.data.get("refresh")
-        if not  refresh_token:
-            return Response({"detail":"Refresh token missing"}, status=status.HTTP_400_BAD_REQUEST)
+    permission_classes = [IsAuthenticated]
+    def delete(self,request):
+        serializer = LogoutUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         
-        try:
-            token = RefreshToken(refresh_token)
-            token.blacklist()  #blacklisting the refresh token
-        except TokenError:
-            return Response({"detail":"Invalid or expired refresh token"},status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response({"detail":"Logout successful"}, status=status.HTTP_200_OK)    
-            
+        return Response({"message": "Logout successfully"}, status=status.HTTP_200_OK)
+
+    
+
+      
         
