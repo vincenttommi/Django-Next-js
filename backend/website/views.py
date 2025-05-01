@@ -4,9 +4,21 @@ from . import models
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from rest_framework.permissions import IsAuthenticated
 from   rest_framework_simplejwt.tokens import  RefreshToken,TokenError
 from rest_framework.decorators import  permission_classes
+from rest_framework.exceptions import AuthenticationFailed
+from django.shortcuts import redirect
+from .serializers import LoginSerializer,PasswordResetRequestSerializer,SetNewPasswordSerializer,LogoutUserSerializer
+from .utilis import send_code_to_user
+from .models import OneTimePassword, User
+from rest_framework.permissions import IsAuthenticated
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import smart_str,DjangoUnicodeDecodeError
+from django.contrib.auth.tokens import PasswordResetTokenGenerator 
+
+
+
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -63,7 +75,7 @@ class LoginUserView(APIView):
             status=status.HTTP_401_UNAUTHORIZED
         )
 
-                
+                 
 
 
 class LogoutUserView(APIView):
@@ -77,7 +89,59 @@ class LogoutUserView(APIView):
 
     
 
-      
+class verify_user_email(APIView):
+    def post(self,request):
+        otp_code = request.data.get('otp')
+        if not otp_code:
+            return Response({"message": "Passcode not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-
+        try:
+            user_code_obj = OneTimePassword.objects.get(code=otp_code)
+            user = user_code_obj.user
+            if not user.is_verified:
+                user.is_verified = True
+                user.save()
+                return Response({"message": "Account verified successfully"}, status=status.HTTP_200_OK)
+            return Response({"message": "User already verified"}, status=status.HTTP_200_OK)
+        except OneTimePassword.DoesNotExist:
+            return Response({"message": "Invalid passcode"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(f"Error during verification: {e}")
+            return Response({"message": "Something went wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+
+
+
+
+
+class set_new_password(APIView):
+    def post(request):
+        serializer = SetNewPasswordSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class password_reset_request(APIView):
+    def post(self,request):
+        serializer = PasswordResetRequestSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        return Response({'message': 'A link has been sent to your email to reset your password.'}, status=status.HTTP_200_OK)
+
+class password_reset_confirm(APIView):
+    def post(request, uidb64, token):
+        try:
+            user_id = smart_str(urlsafe_base64_decode(uidb64))
+            user = get_object_or_404(User, id=user_id)
+
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                return Response({'success': False, 'message': 'Token is invalid or has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            return Response({'success': True, 'message': 'Credentials are valid', 'uidb64': uidb64, 'token': token}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'success': False, 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    
