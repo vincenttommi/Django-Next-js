@@ -5,7 +5,6 @@ from django.dispatch import receiver
 from rooms.models import Booking
 from events.models import EventBooking
 from django.core.validators import MinValueValidator, MaxValueValidator
-import uuid
 
 
 class Review(models.Model):
@@ -70,4 +69,13 @@ class Banners(models.Model):
 class ControlPanel(models.Model):
     logo = models.ImageField(upload_to='logo_images')
         
+
+
+
+
+class OneTimePassword(models.Model):
+    user = models.OneToOneField(User, models.CASCADE)
+    code = models.CharField(max_length=6,unique=True)
     
+    def __str__(self):
+        return f"{self.user.first_name}-passcode"

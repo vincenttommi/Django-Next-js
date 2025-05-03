@@ -1,8 +1,9 @@
 import random
+from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.mail import BadHeaderError
-from website import settings
-from .models import User, OneTimePassword
+from .models import User,OneTimePassword
+
 
 def generate_otp():
     otp = "".join([str(random.randint(1, 9)) for _ in range(6)])  # Generate 6-digit OTP
