@@ -151,7 +151,7 @@ class PasswordResetConfirmView(APIView):
 
 
 
-class SetNewPasswordView(APIView):
+class SetNewPassword(APIView):
     serializer_class = SetNewPasswordSerializer
 
     def post(self, request):
