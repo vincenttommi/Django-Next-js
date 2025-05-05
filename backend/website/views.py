@@ -125,7 +125,7 @@ class PasswordResetRequestView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        return Response({'message': 'A link has been sent to your email to reset your password.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'A link has been sent to your email to reset your password .Please  note that the link will expire in 5 minutes.'}, status=status.HTTP_200_OK)
     
 
 
