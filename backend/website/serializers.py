@@ -10,6 +10,9 @@ from django.utils.encoding import smart_str, smart_bytes, force_str
 from django.urls import reverse
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
+from .models import OneTimePassword
+
+
 
 
 

@@ -1,68 +1,67 @@
 import random
 from django.conf import settings
-from django.core.mail import EmailMessage
-from django.core.mail import BadHeaderError
-from .models import User,OneTimePassword
+from django.core.mail import EmailMessage, BadHeaderError
+from .models import User, OneTimePassword
 
 
 def generate_otp():
-    otp = "".join([str(random.randint(1, 9)) for _ in range(6)])  # Generate 6-digit OTP
-    return otp
-
+    """Generate a 6-digit OTP (avoiding 0 for simplicity)."""
+    return "".join([str(random.randint(1, 9)) for _ in range(6)])
 
 
 def send_code_to_user(email):
-    subject = "One-time passcode for Email Verification"
+    """
+    Generates an OTP, stores it, and sends it via email to the user.
+    Returns a dict indicating success or failure.
+    """
+    subject = "Your One-Time Passcode for Verification"
     otp_code = generate_otp()
-    print(f"Generated OTP: {otp_code}")  # Debugging: Print OTP to console
 
     try:
         user = User.objects.get(email=email)
     except User.DoesNotExist:
         return {"error": "User with this email does not exist."}
 
-    current_site = "Social"
-    email_body = (
-        f"Hi {user.first_name},\n\n"
-        f"Thanks for signing up on {current_site}. "
-        f"Please verify your email with the following one-time passcode: {otp_code}."
+    # Save or update OTP in DB
+    OneTimePassword.objects.update_or_create(
+        user=user,
+        defaults={"code": otp_code}
     )
 
-    # Save the OTP to the database
-    OneTimePassword.objects.create(user=user, code=otp_code)
+    email_body = (
+        f"Hi {user.first_name or 'there'},\n\n"
+        f"We received a request to verify your identity.\n"
+        f"Please use the following One-Time Passcode (OTP): {otp_code}\n\n"
+        f"If you didn’t request this, please ignore this email."
+    )
 
-    # Send the email
-    from_email = settings.DEFAULT_FROM_EMAIL
-    to_email = [email]
-    
     email_message = EmailMessage(
         subject=subject,
         body=email_body,
-        from_email=from_email,
-        to=to_email,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[email],
     )
 
     try:
         email_message.send(fail_silently=False)
-        print(f"Email sent to {email}")
+        print(f"✅ OTP email sent to {email}")
+        return {"success": "OTP sent successfully", "otp": otp_code}  # Optional return of OTP
     except BadHeaderError as e:
-        print(f"Failed to send email due to bad header: {e}")
-        return {"error": "Invalid header found."}
+        print(f"❌ Email sending failed: Bad header - {e}")
+        return {"error": "Invalid email header"}
     except Exception as e:
-        print(f"Failed to send email: {e}")
-        return {"error": "Failed to send email."}
-    
+        print(f"❌ Email sending failed: {e}")
+        return {"error": "Failed to send email"}
 
 
 def send_normal_email(data):
-    email=EmailMessage(
+    """
+    Sends a standard email.
+    """
+    email = EmailMessage(
         subject=data['email_subject'],
         body=data['email_body'],
-       from_email=settings.EMAIL_HOST_USER,
+        from_email=settings.EMAIL_HOST_USER,
         to=[data['to_email']]
     )
     email.send()
-
-
-
-
