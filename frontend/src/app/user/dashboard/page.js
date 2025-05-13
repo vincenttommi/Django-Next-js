@@ -15,7 +15,7 @@ export default function Page() {
         credentials: "include",
       });
       if (!response.ok) {
-        router.push("/login");
+        router.push("/user/login/");
       }
     };
     checkAuth();
