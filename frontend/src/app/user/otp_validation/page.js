@@ -69,7 +69,7 @@ export default function Page() {
                     <label htmlFor="otp" className="form-label">OTP Validation</label>
                     <input
                       type="number"
-                      name="OTP"
+                      name="otp"
                       className="form-control"
                       placeholder="***"
                       required
