@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from .serializers import LoginSerializer, LogoutUserSerializer, UserSerializer, BannerSerializer
+from .serializers import LoginSerializer, LogoutUserSerializer, OTPValidationSerializer, UserSerializer, BannerSerializer
 from . import models
 from rest_framework import status
 from rest_framework.response import Response
@@ -14,16 +14,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str,DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator 
-
-
-
-
-
-
-
-
 import logging
 logger = logging.getLogger(__name__)
+from .throttle import OTPUserRateThrottle
 
 
 class BannerView(APIView):
@@ -131,4 +124,24 @@ class SetNewPassword(APIView):
             serializer.save()  # Ensure the save method is defined in your serializer
             return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+    
+    
+class  OTPValidationView(APIView):
+    throttle_classes = [OTPUserRateThrottle]
+    def post(self, request):
+        serializer = OTPValidationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.user
+            logger.info(f"✅  OTP validated for user ID:{user.id}, email:{user.email}")
+            return Response({
+                "success":True,
+                "message":"OTP validated successfully.",
+                "user_id": user.id
+            }, status=status.HTTP_200_OK)    
+            logger.warning(f"❌ OTP validation failed:{serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
     

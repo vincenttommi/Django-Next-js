@@ -117,6 +117,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    
+    'DEFAULT_THROTTLE_CLASSES':[
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES':{
+        'anon':'5/minute',
+        'user':'10/minute'
+    }
 } 
 
 SIMPLE_JWT = {
@@ -152,4 +161,23 @@ DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
 PASSWORD_RESET_TIMEOUT =  300 # 5 minutes expressed in seconds
 
 
+ 
+ 
+ 
+
+LOGGING = {
+    'version':1,
+    'disable_existing_loggers':False,
+    'handlers':{
+        'console':{
+            'class':'logging.StreamHandler',
+        },
+    },
+    'root':{
+        'handlers':['console'],
+        'level':'INFO',
+    }
+} 
+ 
+ 
  

@@ -1,0 +1,23 @@
+from rest_framework.throttling import ScopedRateThrottle,SimpleRateThrottle
+from  .models import OneTimePassword
+
+
+class OTPUserRateThrottle(SimpleRateThrottle):
+    scope = 'otp'
+    
+    def get_cache_key(self,request,view):
+        otp = request.data.get('otp')
+        if not otp:
+            return None
+        try:
+            otp_obj = OneTimePassword.objects.get(code=otp)
+            ident = str(otp_obj.user.id) #use user ID fo throttling
+            
+        except OneTimePassword.DoesNotExist:
+            #Fallback to Ip-based rate limiting if OTP is invalid
+            ident = self.get_ident(request)
+            
+        return self.get_cache_key % {
+            'scope':self.scope,
+            'ident':ident
+        }       

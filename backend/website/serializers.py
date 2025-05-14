@@ -11,6 +11,7 @@ from django.urls import reverse
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from .models import OneTimePassword
+from .utilis import send_code_to_user
 
 
 
@@ -96,33 +97,46 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         email = attrs.get('email')
-        if User.objects.filter(email=email).exists():  # Use exists() for checking
-            user = User.objects.get(email=email)
-            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
-            token = PasswordResetTokenGenerator().make_token(user)
 
-            # Accessing the request context properly
-            request = self.context.get('request')
-            site_domain = get_current_site(request).domain
-            relative_link = reverse('password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
-            abslink = f"http://{site_domain}{relative_link}"
-            email_body = f"Hi, use the link below to reset your password:\n{abslink}"
-
-            data = {
-                'email_body': email_body,
-                'email_subject': "Reset your password",
-                'to_email': user.email
-            }
-            send_normal_email(data)
-        else:
+        if not User.objects.filter(email=email).exists():
             raise serializers.ValidationError("User with this email does not exist.")
-        
+
+        user = User.objects.get(email=email)
+        uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
+        token = PasswordResetTokenGenerator().make_token(user)
+
+        # 🔗 Use your utility to send the OTP
+        otp_result = send_code_to_user(email)
+        if "error" in otp_result:
+            raise serializers.ValidationError(otp_result["error"])
+
+        # Get absolute reset link
+        request = self.context.get('request')
+        site_domain = get_current_site(request).domain
+        relative_link = reverse('password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
+        abslink = f"http://{site_domain}{relative_link}"
+
+        # Optional: Include the reset link in the OTP email body (already done in utils if desired)
+
+        # Attach for use in response
+        self.user = user
+        self.uidb64 = uidb64
+        self.token = token
+        self.otp_code = otp_result.get("otp")  # Optional, for debug or API response
+
         return attrs
+
+    def create(self, validated_data):
+        return {
+            "message": "OTP and reset link sent to your email.",
+            "uidb64": self.uidb64,
+            "token": self.token,
+            "otp": self.otp_code  # Optional
+        }
     
     
     
-    
-    
+
 
 class SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=100, min_length=6, write_only=True)
@@ -167,3 +181,29 @@ class SetNewPasswordSerializer(serializers.Serializer):
    
     
 
+class  OTPValidationSerializer(serializers.Serializer):
+    otp = serializers.CharField(max_length=6)
+    
+    def validate(self, attrs):
+        otp = attrs.get('otp')
+        try:
+            otp_record = OneTimePassword.objects.get(code=otp)
+            
+        except OneTimePassword.DoesNotExist:
+            raise serializers.ValidationError("Invalid OTP")   
+        
+        if otp_record.is_expired:
+            raise serializers.ValidationError("OTP has expired") 
+        
+        self.user  =  otp_record.user
+        return attrs 
+    
+    def create(self, validated_data):
+        #clear OTP afeter use
+        OneTimePassword.objects.filter(code=validated_data['otp']).delete()
+        return {"message":"OTP is valid","user_id":"self.user.id"}
+    
+    
+    
+    
+        
