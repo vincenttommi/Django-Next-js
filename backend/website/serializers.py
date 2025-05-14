@@ -182,26 +182,19 @@ class SetNewPasswordSerializer(serializers.Serializer):
     
 
 class  OTPValidationSerializer(serializers.Serializer):
-    otp = serializers.CharField(max_length=6)
-    
-    def validate(self, attrs):
-        otp = attrs.get('otp')
-        try:
-            otp_record = OneTimePassword.objects.get(code=otp)
-            
-        except OneTimePassword.DoesNotExist:
-            raise serializers.ValidationError("Invalid OTP")   
-        
-        if otp_record.is_expired:
-            raise serializers.ValidationError("OTP has expired") 
-        
-        self.user  =  otp_record.user
-        return attrs 
-    
-    def create(self, validated_data):
-        #clear OTP afeter use
-        OneTimePassword.objects.filter(code=validated_data['otp']).delete()
-        return {"message":"OTP is valid","user_id":"self.user.id"}
+  otp = serializers.CharField(required=True)
+  
+  def validate(self, data):
+      otp =  data.get('otp')
+      
+      try:
+          otp_obj = OneTimePassword.objects.get(code=otp)
+      except OneTimePassword.DoesNotExist:
+          raise serializers.ValidationError("Invalid OTP")   
+      
+      self.user = otp_obj.user
+      self.otp_obj = otp_obj
+      return data
     
     
     

@@ -17,7 +17,5 @@ class OTPUserRateThrottle(SimpleRateThrottle):
             # Fallback to IP-based rate limiting if OTP is invalid
             ident = self.get_ident(request)
 
-        return self.key_template % {
-            'scope': self.scope,
-            'ident': ident
-        }
+        # Define my own cache key pattern manually
+        return f"throttle_{self.scope}_{ident}"

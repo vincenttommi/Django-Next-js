@@ -122,7 +122,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'otp': '5/min',  # or whatever rate you prefer
+        'otp': '10/min',  # or whatever rate you prefer
     }
 } 
 
@@ -156,7 +156,7 @@ DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
 
 
 
-PASSWORD_RESET_TIMEOUT =  300 # 5 minutes expressed in seconds
+PASSWORD_RESET_TIMEOUT =  36000 # 60 minutes expressed in seconds
 
 
  

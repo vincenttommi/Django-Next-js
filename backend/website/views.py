@@ -135,11 +135,19 @@ class  OTPValidationView(APIView):
         serializer = OTPValidationSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.user
+            
+            
+            #Delete OTP afters successful validation
+            serializer.otp_obj.delete()
+            
             logger.info(f"✅  OTP validated for user ID:{user.id}, email:{user.email}")
             return Response({
                 "success":True,
                 "message":"OTP validated successfully.",
-                "user_id": user.id
+                "user":{
+                "id": user.id,
+                "email":user.email,
+                }
             }, status=status.HTTP_200_OK)    
             logger.warning(f"❌ OTP validation failed:{serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
