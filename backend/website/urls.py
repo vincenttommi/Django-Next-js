@@ -12,7 +12,7 @@ urlpatterns = [
     # path('verify-user-email/', views.VerifyuserEmail.as_view(), name='VerifyuserEmail'),
     path('password-reset-confirm/<uidb64>/<token>/',views.PasswordResetConfirmView.as_view(),name='password-reset-confirm'),
     path('set-newPassword-View/', views.SetNewPassword.as_view(),name='SetNewPasswordView'),
-    path('otp-validate', views.OTPValidationView.as_view(), name='otp-validate')
+    path('otp-validate/', views.OTPValidationView.as_view(), name='otp-validate')
     
     
 ]
