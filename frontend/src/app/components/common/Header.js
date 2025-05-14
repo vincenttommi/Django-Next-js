@@ -14,11 +14,16 @@ export default function Header() {
     // Access localStorage only in the browser
     try {
       const storedUser = localStorage.getItem('user');
-      if (storedUser) {
+      
+      // Check for valid JSON and remove invalid data
+      if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
         setUser(JSON.parse(storedUser));
+      } else {
+        localStorage.removeItem('user'); // Clean up invalid user data
       }
     } catch (error) {
       console.error('Error parsing user from localStorage:', error);
+      localStorage.removeItem('user'); // Clean up invalid data
     }
   }, []); // Empty dependency array to run once on mount
 
