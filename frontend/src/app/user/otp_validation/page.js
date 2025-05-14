@@ -30,11 +30,11 @@ export default function Page() {
 
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(resData.user));
-        setMessage('✅ Password Changed Successfully.');
+        setMessage('✅ OTP  Verified Successfully.');
         formRef.current.reset();
 
         setTimeout(() => {
-          router.push('/user/change-password');
+          router.push('/user/change_password');
         }, 1000);
       } else {
         if (resData.detail === 'Invalid email') {
