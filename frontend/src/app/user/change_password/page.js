@@ -1,38 +1,113 @@
 import Link from "next/link";
 import DashboardSidebar from "@/app/components/user/DashboardSidebar";
+"use client"
+import { useState,useEffect } from "react";
+import  {userRouter} from "next/navigation";
+
+
+
 export default function Page(){
+
+
+  const router = UseRouter();
+  const [newPassword,setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [uidb64,setUidb64] = useState("");
+  const [token,setToken] =useState("");
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] =useState("");
+
+
+
+  useEffect(()=>{
+
+    //Extracting uidb64 and  token from the URL
+    const path = window.location.pathname;
+    const segments = path.split("/");
+    setUidb64(segments[segments.length - 2]);
+    setToken(segments[segments.length - 1]);
+
+
+
+    //validating tokens
+    fetch(`http://localhost:8000/api/password-reset-confirm/${segments[segments.length - 2]}/${segments[segments.length - 1]}/`,{
+      method :"POST",
+    })
+    .then(res => res.json())
+    .then(data =>{
+      if(!data.success){
+        setError("invalid or expired reset link")
+      }
+    });
+  }, []);
+
+const handleSumbit = async () =>{
+if(newPassword !== confirmPassword){
+  setError("Password do not match");
+  return;
+}
+try{
+  const res = await fetch("http://localhost:8000/api/set-newPassword-View",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+    },
+    body: JSON.stringify({ password: newPassword, uidb64,token}),
+  });
+
+  const data = await res.json();
+
+  if(res.ok){
+    setSuccessMessage("Password reset successful!");
+    setError("");
+  } else{
+    setError(data.message || "Somethings went wrong");
+  }
+} catch (err){
+  setError("Failed to reset password.");
+}
+};
     return(
-        <section className="container my-5">
-            <div className="row">
-                <div className="col-md-4  col-12">
-                    <DashboardSidebar />
-                </div>
-                <div className="col-md-8 col-12">
-                    < div className="card">
-                        <h5 className="card-header">Update Profile</h5>
-                    <div className="card-body">
-                        <div className="row">
+      <section className="container my-5">
+      <div className="row">
+        <div className="col-md-4 col-12">
+          <DashboardSidebar />
+        </div>
+        <div className="col-md-8 col-12">
+          <div className="card">
+            <h5 className="card-header">Reset Password</h5>
+            <div className="card-body">
+              {error && <div className="alert alert-danger">{error}</div>}
+              {successMessage && <div className="alert alert-success">{successMessage}</div>}
+              <div className="row">
                 <div className="col-md-5 col-12 mb-3">
-                  <label htmlFor="inputEmail4" className="form-lable">New Password</label>
-                  <input type="password" className="form-control" placeholder="***" />
+                  <label className="form-label">New Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
                 </div>
                 <div className="col-md-5 col-12 mb-3">
-                  <label htmlFor="inputEmail4" className="form-lable">Confirm Password</label>
-                  <input type="password" className="form-control" placeholder="*****" />
+                  <label className="form-label">Confirm Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
                 </div>
-              <div  className="col-md-6 col-12 mb-3">
-                <button className="btn btn-secondary">Reset</button>
-                <button className="btn hms-color-dark m-2">Submit</button>
+                <div className="col-md-6 col-12 mb-3">
+                  <button className="btn hms-color-dark" onClick={handleSubmit}>
+                    Submit
+                  </button>
+                </div>
               </div>
-              </div>
-                </div>    
-
-                </div>
-
-
-                </div>
             </div>
-
-        </section>
-    )
+          </div>
+        </div>
+      </div>
+    </section>
+    );
 }
