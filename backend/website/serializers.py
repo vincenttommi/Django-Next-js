@@ -12,6 +12,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from .models import OneTimePassword
 from .utilis import send_code_to_user
+from django.contrib.auth import get_user_model
 
 
 
@@ -139,41 +140,37 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
 
 class SetNewPasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(max_length=100, min_length=6, write_only=True)
-    confirm_password = serializers.CharField(max_length=100, min_length=6, write_only=True)
+    password = serializers.CharField(write_only=True, min_length=6)
+    confirm_password = serializers.CharField(write_only=True, min_length=6)
     uidb64 = serializers.CharField(write_only=True)
     token = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
-        token = attrs.get('token')
-        uidb64 = attrs.get('uidb64')
-        password = attrs.get('password')
-        confirm_password = attrs.get('confirm_password')
+        password = attrs.get("password")
+        confirm_password = attrs.get("confirm_password")
+        uidb64 = attrs.get("uidb64")
+        token = attrs.get("token")
 
-        # Check if the passwords match
         if password != confirm_password:
             raise serializers.ValidationError("Passwords do not match.")
 
-        # Decode the uidb64
-        user_id = force_str(urlsafe_base64_decode(uidb64))
         try:
+            user_id = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+        except (User.DoesNotExist, ValueError, TypeError):
             raise AuthenticationFailed("User not found.")
 
-        # Validate the token
         if not PasswordResetTokenGenerator().check_token(user, token):
-            raise AuthenticationFailed('Reset link is invalid or expired.')
+            raise AuthenticationFailed("Invalid or expired token.")
 
-        # If everything is fine, return the user object
-        attrs['user'] = user
+        attrs["user"] = user
         return attrs
 
     def create(self, validated_data):
-        user = validated_data['user']
-        user.set_password(validated_data['password'])
+        user = validated_data["user"]
+        user.set_password(validated_data["password"])
         user.save()
-        return user    
+        return user  
     
    
 

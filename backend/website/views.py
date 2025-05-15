@@ -17,6 +17,10 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import logging
 logger = logging.getLogger(__name__)
 from .throttle import OTPUserRateThrottle
+from django.contrib.auth import get_user_model
+
+
+User  = get_user_model()
 
 
 class BannerView(APIView):
@@ -97,15 +101,12 @@ class PasswordResetRequestView(APIView):
 class PasswordResetConfirmView(APIView):
     def post(self, request, uidb64, token):
         try:
-            # Decode the uidb64 to get user ID
             user_id = smart_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(id=user_id)
 
-            # Check if the token is valid
             if not PasswordResetTokenGenerator().check_token(user, token):
                 return Response({'success': False, 'message': 'Token is invalid or has expired'}, status=status.HTTP_401_UNAUTHORIZED)
 
-            # If everything is valid
             return Response({'success': True, 'message': 'Credentials are valid', 'uidb64': uidb64, 'token': token}, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
@@ -114,18 +115,15 @@ class PasswordResetConfirmView(APIView):
             return Response({'success': False, 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
 class SetNewPassword(APIView):
     serializer_class = SetNewPasswordSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()  # Ensure the save method is defined in your serializer
+            serializer.save()
             return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
     
     
     
