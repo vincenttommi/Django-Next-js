@@ -74,21 +74,12 @@ export default function Header() {
                 Contact Us
               </Link>
             </li>
-            {/* Conditional rendering for SignUp and Logout */}
-            {!user && (
+           
               <li className="nav-item">
                 <Link className="btn mt-1 me-3 text-white fw-bold bg-success" href="/user/signup">
                   SignUp
                 </Link>
               </li>
-            )}
-            {user && (
-              <li className="nav-item">
-                <Link className="btn mt-1 me-3 text-white fw-bold" href="/user/logout">
-                  Logout
-                </Link>
-              </li>
-            )}
             <li className="nav-item me-3">
               <Link className="nav-link text-white fw-bold btn me-3 text-white" href="/user/book_event">
                 Book Event

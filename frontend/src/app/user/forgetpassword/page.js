@@ -71,7 +71,7 @@ export default function Page(){
               </form>
 
               <p>
-                If you want to change your password, <Link href="/user/change_password">Click here</Link>
+                Click, <Link href="/user/otp_validation">To verify your OTP</Link>
               </p>
             </div>
           </div>

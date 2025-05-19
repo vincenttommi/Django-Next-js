@@ -12,25 +12,32 @@ export default function Page() {
   async function handleForm(e) {
     e.preventDefault();
     const formData = new FormData(formRef.current);
-    
+
     const data = {
       email: formData.get('email'),
       password: formData.get('password'),
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/website/login/',{
+      const response = await fetch('http://127.0.0.1:8000/website/login/', {
         method: 'POST',
-        body:JSON.stringify(data),
+        body: JSON.stringify(data),
         headers: {
-          'Content-Type':'application/json',
+          'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies
+        credentials: 'include',
       });
 
+      const resData = await response.json();
 
-      const  resData = await response.json();
       if (response.ok) {
+        // ✅ Save tokens and user info
+        localStorage.setItem('tokens',JSON.stringify({
+          access: resData.access_token,
+          refresh:resData.refresh_token,
+        }));
+        localStorage.setItem('user', JSON.stringify(resData.user));
+
         setMessage('✅ Login successful.');
         formRef.current.reset();
         setTimeout(() => {
@@ -44,7 +51,7 @@ export default function Page() {
         }
       }
     } catch (error) {
-      console.error('Fetch error details:', error,error.message);
+      console.error('Fetch error details:', error.message);
       setMessage('❌ Fetch error: Unable to connect to the server');
     }
   }
@@ -81,6 +88,9 @@ export default function Page() {
                   </div>
                   <p>
                     Not registered? <Link href="/user/signup">SignUp here</Link>
+                  </p>
+                  <p>
+                    Forgot Password?<Link href="/user/forgetpassword">Click here</Link>
                   </p>
                 </div>
               </form>
