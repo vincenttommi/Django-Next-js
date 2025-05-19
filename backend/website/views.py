@@ -18,6 +18,7 @@ import logging
 logger = logging.getLogger(__name__)
 from .throttle import OTPUserRateThrottle
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import AllowAny
 
 
 User  = get_user_model()
@@ -31,20 +32,19 @@ class BannerView(APIView):
         serializer = self.serializer_class(banners, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class SignUpView(APIView):
+
+
+class SignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(
-                {"detail": "Signup successful!"},
-                status=status.HTTP_201_CREATED
+            user = User.objects.create_user(
+                username=serializer.validated_data['username'],
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password']
             )
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
+            return Response({"message": "User created successfully."}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -79,11 +79,11 @@ class LoginUserView(APIView):
 
 class LogoutUserView(APIView):
     permission_classes = [IsAuthenticated]
-    def delete(self,request):
+
+    def delete(self, request):
         serializer = LogoutUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        
         return Response({"message": "Logout successfully"}, status=status.HTTP_200_OK)
 
 
@@ -99,6 +99,8 @@ class PasswordResetRequestView(APIView):
 
 
 class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+    
     def post(self, request, uidb64, token):
         try:
             user_id = smart_str(urlsafe_base64_decode(uidb64))
@@ -116,6 +118,7 @@ class PasswordResetConfirmView(APIView):
 
 
 class SetNewPassword(APIView):
+    permission_classes = [AllowAny]
     serializer_class = SetNewPasswordSerializer
 
     def post(self, request):

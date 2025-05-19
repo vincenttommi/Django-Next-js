@@ -46,8 +46,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'password', 'email', 'profile']
+        fields = ['first_name','last_name', 'username', 'password', 'email', 'profile']
         extra_kwargs = {'password': {'write_only': True}}
+        
+        
+    def validate(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        return value
+       
 
     def create(self, validated_data):
         profile_data = validated_data.pop('profile')
@@ -78,17 +85,15 @@ class LogoutUserSerializer(serializers.Serializer):
     }
 
     def validate(self, attrs):
-        
-        self.token = attrs.get('refresh_token')  # Fixed typo
+        self.token = attrs.get('refresh_token')
         return attrs
 
     def save(self, **kwargs):
         try:
             token = RefreshToken(self.token)
             token.blacklist()
-        except TokenError as e:
+        except TokenError:
             raise serializers.ValidationError(self.error_messages['bad_token'])
-
 
 
 
