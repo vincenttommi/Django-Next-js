@@ -136,47 +136,39 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 class SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=100, min_length=6, write_only=True)
     confirm_password = serializers.CharField(max_length=100, min_length=6, write_only=True)
-    uidb64 = serializers.CharField(write_only=True)
-    token = serializers.CharField(write_only=True)
+    uidb64 = serializers.CharField()
+    token = serializers.CharField()
 
     def validate(self, attrs):
-        token = attrs.get('token')
-        uidb64 = attrs.get('uidb64')
         password = attrs.get('password')
-        confirm_password = attrs.get('confirm_password')
-
-        # Check if the passwords match
+        confirm_password = attr.get('confirm_password')
+        uidb64 = attrs.get('uidb64')
+        token = attrs.get('token')
+        
+        
+        
+        #checking if  password match
         if password != confirm_password:
-            raise serializers.ValidationError("Passwords do not match.")
-
-        # Decode the uidb64
-        user_id = force_str(urlsafe_base64_decode(uidb64))
+            raise serializers.ValidationError("Passwords do  not match")
+        
         try:
-            user = User.objects.get(id=user_id)
+            
+            user_id  = smart_str(urlsafe_base64_decode(uidb64))
+            user =  User.objects.get(id=user_id)
         except User.DoesNotExist:
-            raise AuthenticationFailed("User not found.")
+            raise AuthenticationFailed("User not found")
 
-        # Validate the token
-        if not PasswordResetTokenGenerator().check_token(user, token):
-            raise AuthenticationFailed('Reset link is invalid or expired.')
 
-        # If everything is fine, return the user object
+        if not  PasswordResetTokenGenerator().check_token(user,token):
+            raise AuthenticationFailed("Reset link is invalid or has expired") 
+        
+        #attaching user object to attrs for use in save()
         attrs['user'] = user
         return attrs
-
-    def create(self, validated_data):
-        user = validated_data['user']
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
     
-    
-    
-
-
-
-        
-        
-        
-
-
+      def save(self, **kwargs):
+          user = self.validated_data['user']
+          password = self.validated_data['password']
+          user.set_password(password)
+          user.save()
+          return user   
