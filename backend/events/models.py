@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
+from django.conf import settings
 
 
 
@@ -18,7 +18,7 @@ class EventType(models.Model):
 
 class EventBooking(models.Model):
    event_type = models.ForeignKey(EventType, on_delete=models.CASCADE)
-   user = models.ForeignKey(User, on_delete=models.CASCADE)
+   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
    event_detail = models.TextField()
    booking_date = models.DateTimeField(auto_now_add=True)
    total_quest = models.PositiveIntegerField()  # Ensure only positive integers

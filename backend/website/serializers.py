@@ -13,8 +13,7 @@ from rest_framework.response import Response
 from .models import OneTimePassword
 from .utilis import send_code_to_user
 from django.contrib.auth import get_user_model
-
-
+from django.utils.encoding import smart_str,DjangoUnicodeDecodeError
 
 
 
@@ -98,107 +97,86 @@ class LogoutUserSerializer(serializers.Serializer):
 
 
 
+
+
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255)
 
     def validate(self, attrs):
-        email = attrs.get('email')
+        email = attrs.get('email', '').strip().lower()  # normalize input
+        request = self.context.get('request')
 
-        if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("User with this email does not exist.")
+        # ✅ Raise error only if user does NOT exist
+        if not User.objects.filter(email__iexact=email).exists():
+            raise serializers.ValidationError({"email": "User with this email does not exist."})
 
-        user = User.objects.get(email=email)
+        user = User.objects.get(email__iexact=email)
+
         uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
         token = PasswordResetTokenGenerator().make_token(user)
 
-        # 🔗 Use your utility to send the OTP
-        otp_result = send_code_to_user(email)
-        if "error" in otp_result:
-            raise serializers.ValidationError(otp_result["error"])
-
-        # Get absolute reset link
-        request = self.context.get('request')
         site_domain = get_current_site(request).domain
         relative_link = reverse('password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
         abslink = f"http://{site_domain}{relative_link}"
+        email_body = (
+             f"Hi, use the link below to reset your password:\n\n{abslink}\n\n"
+            f"This link will expire in 10 minutes."
+            )
 
-        # Optional: Include the reset link in the OTP email body (already done in utils if desired)
 
-        # Attach for use in response
-        self.user = user
-        self.uidb64 = uidb64
-        self.token = token
-        self.otp_code = otp_result.get("otp")  # Optional, for debug or API response
+        data = {
+            "email_body": email_body,
+            "email_subject": "Reset your password",
+            "to_email": user.email
+        }
 
+        send_normal_email(data)
         return attrs
 
-    def create(self, validated_data):
-        return {
-            "message": "OTP and reset link sent to your email.",
-            "uidb64": self.uidb64,
-            "token": self.token,
-            "otp": self.otp_code  # Optional
-        }
-    
-    
-    
-
-
 class SetNewPasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(write_only=True, min_length=6)
-    confirm_password = serializers.CharField(write_only=True, min_length=6)
+    password = serializers.CharField(max_length=100, min_length=6, write_only=True)
+    confirm_password = serializers.CharField(max_length=100, min_length=6, write_only=True)
     uidb64 = serializers.CharField(write_only=True)
     token = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
-        password = attrs.get("password")
-        confirm_password = attrs.get("confirm_password")
-        uidb64 = attrs.get("uidb64")
-        token = attrs.get("token")
+        token = attrs.get('token')
+        uidb64 = attrs.get('uidb64')
+        password = attrs.get('password')
+        confirm_password = attrs.get('confirm_password')
 
+        # Check if the passwords match
         if password != confirm_password:
             raise serializers.ValidationError("Passwords do not match.")
 
+        # Decode the uidb64
+        user_id = force_str(urlsafe_base64_decode(uidb64))
         try:
-            user_id = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(id=user_id)
-        except (User.DoesNotExist, ValueError, TypeError):
+        except User.DoesNotExist:
             raise AuthenticationFailed("User not found.")
 
+        # Validate the token
         if not PasswordResetTokenGenerator().check_token(user, token):
-            raise AuthenticationFailed("Invalid or expired token.")
+            raise AuthenticationFailed('Reset link is invalid or expired.')
 
-        attrs["user"] = user
+        # If everything is fine, return the user object
+        attrs['user'] = user
         return attrs
 
     def create(self, validated_data):
-        user = validated_data["user"]
-        user.set_password(validated_data["password"])
+        user = validated_data['user']
+        user.set_password(validated_data['password'])
         user.save()
-        return user  
+        return user
     
-   
+    
+    
 
 
-   
-    
 
-class  OTPValidationSerializer(serializers.Serializer):
-  otp = serializers.CharField(required=True)
-  
-  def validate(self, data):
-      otp =  data.get('otp')
-      
-      try:
-          otp_obj = OneTimePassword.objects.get(code=otp)
-      except OneTimePassword.DoesNotExist:
-          raise serializers.ValidationError("Invalid OTP")   
-      
-      self.user = otp_obj.user
-      self.otp_obj = otp_obj
-      return data
-    
-    
-    
-    
         
+        
+        
+
+

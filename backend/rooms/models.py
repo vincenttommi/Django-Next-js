@@ -1,7 +1,5 @@
-
-
 from  django.db import models
-from django.contrib.auth.models import User 
+from django.conf import settings
 
 
 
@@ -29,7 +27,7 @@ class  Room(models.Model):
 
 class Booking(models.Model):
    room_no=models.ForeignKey(Room,on_delete=models.CASCADE)
-   user=models.ForeignKey(User, on_delete=models.CASCADE)
+   user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
    booking_date=models.DateTimeField(auto_now_add=True)
    total_quest = models.IntegerField()
    checkin_date = models.DateField()

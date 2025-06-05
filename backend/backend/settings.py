@@ -22,8 +22,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Custom apps
     'rooms',
     'events',
     'website',
@@ -156,7 +154,7 @@ DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
 
 
 
-PASSWORD_RESET_TIMEOUT =  36000 # 60 minutes expressed in seconds
+PASSWORD_RESET_TIMEOUT =  600 # seconds = 10 minutes 
 
 
  
@@ -179,3 +177,21 @@ LOGGING = {
  
  
  
+ 
+
+
+
+
+
+
+
+AUTH_USER_MODEL = 'website.CustomUser'
+
+
+
+# CACHES = {
+#     'default':{
+#         'BACKEND':'django.core.cache.backends.filebased.FileBasedCache',
+#         'Location':'/var/tmp/django_cache',
+#     }
+# }
